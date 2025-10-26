@@ -1,0 +1,26 @@
+package main
+
+import "fmt"
+
+func average(sum int,count int)float64{
+	return float64(sum)/float64(count)
+}
+
+func main(){
+	var sum,num,count int
+	for{
+		fmt.Scanln(&num)
+		sum=sum+num
+		if num==0{
+			break
+		}
+		count++
+	}
+	avg:=average(sum,count)
+
+	if avg>=60{
+		fmt.Printf("平时成绩为%.2f,成绩合格",avg)
+	}else{
+		fmt.Printf("平时成绩为%.2f,成绩不合格",avg)
+	}
+}

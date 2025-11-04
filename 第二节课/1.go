@@ -2,7 +2,6 @@ package main
 
 import "fmt"
 
-// 定义一个类型别名（更语义化）
 type freqMap map[int]int
 
 func countFrequency(nums []int) freqMap {

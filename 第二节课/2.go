@@ -5,10 +5,8 @@ import (
 	"fmt"
 )
 
-// 定义运算函数类型
 type operate func(x, y int) int
 
-// 高阶函数：根据操作符生成计算函数（闭包）
 func genCalculator(op operate) func(x, y int) (int, error) {
 	return func(x, y int) (int, error) {
 		if op == nil {
@@ -18,13 +16,11 @@ func genCalculator(op operate) func(x, y int) (int, error) {
 	}
 }
 
-// 定义四则运算函数
 func add(x, y int) int { return x + y }
 func sub(x, y int) int { return x - y }
 func mul(x, y int) int { return x * y }
 func div(x, y int) int {
 	if y == 0 {
-		// 返回 0，真正使用时会在闭包里判断除零
 		return 0
 	}
 	return x / y

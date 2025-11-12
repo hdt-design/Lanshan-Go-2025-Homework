@@ -7,13 +7,16 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-# 如果有未完成的 rebase，阻止上传
+# 检查是否有未完成的 rebase
 if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ]; then
-  echo "⚠️  检测到未完成的 rebase，请先运行：git rebase --continue 或 git rebase --abort"
+  echo "⚠️ 检测到未完成的 rebase，请先运行：git rebase --continue 或 git rebase --abort"
   exit 1
 fi
 
+# 拉取最新远程分支
 git pull --no-rebase
+
+# 添加、提交并推送更改
 git add .
 git commit -m "$1"
 git push

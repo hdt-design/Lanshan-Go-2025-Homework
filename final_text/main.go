@@ -3,6 +3,7 @@ package main
 import (
 	"final_text/file"
 	"final_text/user"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,7 @@ func main() {
 	r := gin.Default()
 	// 文件模块
 	// 用户模块OST("/register", user.Register)
+	r.POST("/register", user.Register)
 	r.POST("/login", user.Login)
 
 	auth := r.Group("/user")
@@ -27,7 +29,15 @@ func main() {
 		auth.DELETE("/delete", file.DeleteFile)
 		auth.PUT("/restore", file.RestoreFile)
 		auth.POST("/favorite", file.FavoriteFile)
+		auth.GET("/listfavouritefile", file.ListFavoriteFiles)
+		auth.PUT("/unfavouritefile", file.UnfavoriteFile)
+
 	}
 
-	r.Run(":8080")
+	if err := r.Run(":8080"); err != nil {
+		panic(err)
+	}
+
+	num := file.StringToUint64("123")
+	fmt.Println(num)
 }

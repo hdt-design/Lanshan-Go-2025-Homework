@@ -48,11 +48,11 @@ func AuthMiddleware() gin.HandlerFunc {
 
 // User 模型
 type User struct {
-	ID       uint64 `gorm:"primarykey"`
-	Username string `gorm:"unique;size:255"`
-	Password string `gorm:"size:255"`
-	Avatar   string `gorm:"size:255"` //头像
-	Bio      string `gorm:"size:512"` //个人简介
+	ID       uint64 `Gorm:"primary"`
+	Username string `Gorm:"unique;size:255"`
+	Password string `Gorm:"size:255"`
+	Avatar   string `Gorm:"size:255"` //头像
+	Bio      string `Gorm:"size:512"` //个人简介
 }
 
 var db *gorm.DB
@@ -65,7 +65,9 @@ func InitDB() {
 		panic("failed to connect database")
 	}
 	// Migrate the schema
-	db.AutoMigrate(&User{})
+	if err := db.AutoMigrate(&User{}); err != nil {
+		panic(err)
+	}
 }
 
 // Register a new user with username and password
@@ -164,7 +166,7 @@ func GetUserInfo(c *gin.Context) {
 func UpdateUserInfo(c *gin.Context) {
 	uid := c.MustGet("user_id").(uint64)
 	var userUpdates struct {
-		Avator string `json:"avator"`
+		Avatar string `json:"avatar"`
 		Bio    string `json:"bio"`
 	}
 	if err := c.ShouldBindJSON(&userUpdates); err != nil {
@@ -178,8 +180,8 @@ func UpdateUserInfo(c *gin.Context) {
 		return
 	}
 
-	if userUpdates.Avator != "" {
-		db.Model(&user).Update("avator", userUpdates.Avator)
+	if userUpdates.Avatar != "" {
+		db.Model(&user).Update("avatar", userUpdates.Avatar)
 	}
 	if userUpdates.Bio != "" {
 		db.Model(&user).Update("bio", userUpdates.Bio)
@@ -188,22 +190,4 @@ func UpdateUserInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User info updated successfully",
 	})
-}
-
-// 启动gin服务器
-func main() {
-	InitDB()
-	r := gin.Default()
-
-	r.POST("/register", Register)
-	r.POST("/login", Login)
-
-	auth := r.Group("/user")
-	auth.Use(AuthMiddleware())
-	{
-		auth.GET("/info", GetUserInfo)
-		auth.PUT("/update", UpdateUserInfo)
-	}
-
-	r.Run(":8080")
 }

@@ -18,7 +18,7 @@ func DB() *gorm.DB {
 	return db
 }
 
-// AuthMiddleware is a middleware that checks for JWT in the Authorization header.
+// AuthMiddleware 是一个中间件，确保只有携带有效JWT的请求才能通过
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
